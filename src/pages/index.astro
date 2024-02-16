@@ -1,0 +1,95 @@
+---
+
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LineUp | The Line Learning App</title>
+  <link rel="icon" type="image/svg" href="/lineup.svg">
+</head>
+<body class="bg-lineup-100 dark:bg-lineup-950 font-sans antialiased">
+  <header class="bg-lineup-600 dark:bg-lineup-900 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="/" class="text-xl font-bold text-lineup-50">
+        <img src="/lineup.svg" alt="LineUp logo" class="inline-block mr-2 size-9 rounded-md"/> LineUp
+      </a>
+      <a href="/about" class=" text-lineup-50 hover:underline hover:text-lineup-100">About</a>
+    </div>
+  </header>
+  <div class="container mx-auto p-4">
+    <textarea id="script" class="w-full h-40 p-2 border border-lineup-950 rounded focus:outline-none focus:border-lineup-600" placeholder="Enter your script here" oninput="showScriptButton()"></textarea>
+    <button id="start-learning-btn" onclick="startLearning()" class="bg-lineup-600 hover:bg-lineup-700 dark:bg-lineup-900 dark:hover:bg-lineup-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Start Learning</button>
+    <div id="output-container" class="hidden mt-4 md:block">
+      <div id="output" class="output-line text-lg dark:text-lineup-50"></div>
+      <div class="learning-message text-sm dark:text-lineup-100 italic mt-4">Press Space to advance to your next line</div>
+    </div>      
+    <div id="nav-buttons" class="sm:hidden hidden mt-4">
+      <button onclick="resetScript()" class="bg-lineup-600 hover:bg-lineup-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2">Previous</button>
+      <button onclick="showNextSentence()" class="bg-lineup-600 hover:bg-lineup-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Next</button>
+    </div>
+    <div id="end-buttons" class="mt-4">
+      <button onclick="resetScript()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2">Reset</button>
+      <button onclick="restartScript()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Restart</button>
+    </div>
+  </div>
+
+  <script is:inline>
+    let scriptSentences = [];
+    let currentSentenceIndex = 0;
+    let outputDiv = document.getElementById('output');
+    let canAcceptInput = true;
+
+    function startLearning() {
+      const scriptText = document.getElementById('script').value;
+      scriptSentences = scriptText.match(/[^\.!\?]+[\.!\?]+/g);
+      document.getElementById('script').classList.add('hidden');
+      document.getElementById('start-learning-btn').classList.add('hidden');
+      document.getElementById('output-container').classList.remove('hidden');
+      document.getElementById('nav-buttons').classList.remove('hidden');
+
+      showNextSentence();
+      window.addEventListener('keypress', handleKeyPress);
+    }
+
+    function showNextSentence() {
+      if (currentSentenceIndex < scriptSentences.length) {
+        outputDiv.textContent = scriptSentences[currentSentenceIndex];
+        currentSentenceIndex++;
+      } else {
+        outputDiv.textContent = 'Well done! You\'ve reached the end of your script.';
+        window.removeEventListener('keypress', handleKeyPress);
+      }
+      canAcceptInput = false;
+      setTimeout(() => {
+        canAcceptInput = true;
+      }, 750); // 750 milliseconds = 0.75 second
+    }
+
+    function handleKeyPress(event) {
+      if (event.code === 'Space' && canAcceptInput) {
+        showNextSentence();
+      }
+    }
+
+    function resetScript() {
+      document.getElementById('script').value = '';
+      document.getElementById('start-learning-btn').classList.remove('hidden');
+      document.getElementById('output-container').classList.add('hidden');
+      document.getElementById('script').classList.remove('hidden');
+      document.getElementById('nav-buttons').classList.add('hidden');
+      currentSentenceIndex = 0;
+      scriptSentences = [];
+    }
+
+    function restartScript() {
+      currentSentenceIndex = 0;
+      document.getElementById('output-container').classList.remove('hidden');
+      showNextSentence();
+      window.addEventListener('keypress', handleKeyPress);
+    }
+  </script>
+</body>
+</html>

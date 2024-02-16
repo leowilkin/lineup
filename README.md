@@ -1,5 +1,4 @@
-# LineUp
-The Line Learning App that just _works_.
+![LineUp](https://github.com/leowilkin/lineup/assets/64415791/c8f8bc4e-b47b-4164-87ce-fc20f9804162)
 
 ### What would you use LineUp for?
 Learning screenplays, monologues, short sections of scripts you just can't nail down and many more
